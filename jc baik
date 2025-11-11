@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Berita Jc</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #1565c0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #1565c0;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    article {
+      border-bottom: 1px solid #ddd;
+      margin-top: 20px;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      color: #1565c0;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    footer {
+      background: #0d47a1;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 40px;
+    }
+
+    .admin-form {
+      display: none;
+    }
+
+    .login-form {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Portal Berita Jc</h1>
+    <p>Berita Terkini dan Terpercaya</p>
+  </header>
+
+  <div class="container">
+    <div class="login-form" id="loginForm">
+      <h2>Login Admin</h2>
+      <input type="password" id="password" placeholder="Masukkan password admin..." />
+      <button onclick="login()">Masuk</button>
+    </div>
+
+    <div class="admin-form" id="adminForm">
+      <h2>Tulis Berita Baru</h2>
+      <input type="text" id="judul" placeholder="Judul berita..." />
+      <textarea id="isi" placeholder="Isi berita..." rows="5"></textarea>
+      <input type="text" id="penulis" placeholder="Nama penulis..." />
+      <input type="file" id="gambar" accept="image/*" />
+      <button onclick="tambahBerita()">Tambahkan Berita</button>
+      <hr>
+    </div>
+
+    <h2>Daftar Berita</h2>
+    <div id="daftar-berita"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Portal Berita Jc</p>
+  </footer>
+
+  <script>
+    const passwordBenar = "admin123"; // ubah password di sini
+    let isAdmin = false;
+
+    function login() {
+      const pass = document.getElementById("password").value;
+      if (pass === passwordBenar) {
+        isAdmin = true;
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("adminForm").style.display = "block";
+      } else {
+        alert("Password salah!");
+      }
+    }
+
+    function tambahBerita() {
+      if (!isAdmin) return alert("Hanya admin yang bisa menambahkan berita!");
+
+      const judul = document.getElementById("judul").value;
+      const isi = document.getElementById("isi").value;
+      const penulis = document.getElementById("penulis").value;
+      const gambarInput = document.getElementById("gambar");
+      const daftar = document.getElementById("daftar-berita");
+
+      if (judul && isi && penulis) {
+        const artikel = document.createElement("article");
+
+        // Baca gambar
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          artikel.innerHTML = `
+            <h2>${judul}</h2>
+            <p><small>Ditulis oleh ${penulis} • ${new Date().toLocaleDateString()}</small></p>
+            ${gambarInput.files[0] ? `<img src="${e.target.result}" alt="Gambar Berita">` : ""}
+            <p>${isi}</p>
+          `;
+          daftar.prepend(artikel);
+        };
+
+        if (gambarInput.files[0]) {
+          reader.readAsDataURL(gambarInput.files[0]);
+        } else {
+          artikel.innerHTML = `
+            <h2>${judul}</h2>
+            <p><small>Ditulis oleh ${penulis} • ${new Date().toLocaleDateString()}</small></p>
+            <p>${isi}</p>
+          `;
+          daftar.prepend(artikel);
+        }
+
+        // Kosongkan form
+        document.getElementById("judul").value = "";
+        document.getElementById("isi").value = "";
+        document.getElementById("penulis").value = "";
+        document.getElementById("gambar").value = "";
+      } else {
+        alert("Isi semua kolom terlebih dahulu!");
+      }
+    }
+  </script>
+</body>
+</html>
