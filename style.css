@@ -1,65 +1,100 @@
 body {
+    font-family: Arial, sans-serif;
     margin: 0;
     background: #f5f7fa;
-    font-family: Arial;
 }
 
 header {
-    background: #0057ff;
+    background: #1e293b;
+    padding: 15px 25px;
     color: white;
-    padding: 20px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-header button, .back {
-    background: white;
-    padding: 8px 12px;
-    color: #0057ff;
-    border-radius: 6px;
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.admin-btn {
+    background: #3b82f6;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
     text-decoration: none;
-    border: none;
-    cursor: pointer;
 }
 
-.grid {
+.container {
+    width: 90%;
+    margin: 20px auto;
+}
+
+.news-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
 }
 
 .card {
     background: white;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.12);
+    transition: 0.2s;
     cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-4px);
 }
 
 .card img {
     width: 100%;
-    height: 150px;
+    height: 120px;   /* GAMBAR KECIL */
     object-fit: cover;
     border-radius: 8px;
 }
 
-.popup {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-}
-
-.popup-content {
-    background: white;
-    padding: 20px;
-    width: 300px;
-    border-radius: 10px;
+.card h3 {
+    margin: 10px 0 5px;
 }
 
 .detail-img {
     width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.admin-panel input,
+.admin-panel textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #0ea5e9;
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    width: 100%;
     border-radius: 10px;
-    margin: 15px 0;
+    cursor: pointer;
+    .delete-btn {
+    background: #ef4444;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 8px;
+    cursor: pointer;
+    width: 100%;
+}
 }

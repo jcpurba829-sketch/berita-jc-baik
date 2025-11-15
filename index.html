@@ -3,47 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Berita TBJ</title>
+    <title>TBJ News</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <h1>Portal Berita TBJ</h1>
-    <button id="adminBtn">Login Admin</button>
+    <div class="logo">TBJ News</div>
+    <a href="admin.html" class="admin-btn">Login Admin</a>
 </header>
 
-<main>
+<section class="container">
     <h2>Berita Terbaru</h2>
-    <div id="berita-container" class="grid"></div>
-</main>
-
-<!-- POPUP LOGIN -->
-<div id="loginPopup" class="popup">
-    <div class="popup-content">
-        <h3>Login Admin</h3>
-        <input type="password" id="password" placeholder="Password admin">
-        <button id="login">Masuk</button>
-        <button id="closePopup">Tutup</button>
-    </div>
-</div>
-
-<!-- POPUP TAMBAH BERITA -->
-<div id="addPopup" class="popup">
-    <div class="popup-content">
-        <h3>Buat Berita Baru</h3>
-
-        <input type="text" id="judul" placeholder="Judul berita">
-        <textarea id="isi" placeholder="Isi berita"></textarea>
-        <input type="file" id="gambar" accept="image/*">
-
-        <button id="simpanBerita">Simpan</button>
-        <button id="closeAdd">Tutup</button>
-    </div>
-</div>
+    <div id="beritaContainer" class="news-grid"></div>
+</section>
 
 <script src="script.js"></script>
-
 </body>
 </html><!DOCTYPE html>
 <html lang="id">
@@ -56,24 +31,54 @@
 <body>
 
 <header>
-    <h1>Detail Berita</h1>
-    <a href="index.html" class="back">← Kembali</a>
+    <div class="logo">TBJ News</div>
+    <a href="index.html" class="admin-btn">Kembali</a>
 </header>
 
-<main id="detail-container"></main>
+<div class="container" id="detailContainer"></div>
 
-<script>
-let data = JSON.parse(localStorage.getItem("berita")) || [];
-let index = new URLSearchParams(window.location.search).get("id");
+<script src="script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin TBJ News</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-let berita = data[index];
+<header>
+    <div class="logo">Admin TBJ News</div>
+    <a href="index.html" class="admin-btn">Keluar</a>
+</header>
 
-document.getElementById("detail-container").innerHTML = `
-    <h2>${berita.judul}</h2>
-    <img src="${berita.gambar}" class="detail-img">
-    <p>${berita.isi}</p>
-`;
-</script>
+<div class="container admin-panel">
+    <h2>Tambah Berita Baru</h2>
 
+    <input type="text" id="judul" placeholder="Judul Berita">
+    <textarea id="konten" placeholder="Isi Berita..."></textarea>
+
+    <label>Gambar:</label>
+    <input type="file" id="gambar" accept="image/*">
+
+    <button id="simpanBerita">Simpan Berita</button>
+</div><div class="container admin-panel">
+    <h2>Tambah Berita Baru</h2>
+
+    <input type="text" id="judul" placeholder="Judul Berita">
+    <textarea id="konten" placeholder="Isi Berita..."></textarea>
+
+    <label>Gambar:</label>
+    <input type="file" id="gambar" accept="image/*">
+
+    <button id="simpanBerita">Simpan Berita</button>
+
+    <h2 style="margin-top:30px;">Daftar Berita</h2>
+    <div id="adminBeritaList"></div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
