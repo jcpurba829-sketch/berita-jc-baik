@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin TBJ News</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">Admin TBJ News</div>
+    <a href="index.html" class="admin-btn">Kembali</a>
+</header>
+
+<!-- FORM LOGIN ADMIN -->
+<div class="container" id="loginForm">
+    <h2>Login Admin</h2>
+    <input type="password" id="adminPassword" placeholder="Masukkan Password">
+    <button onclick="loginAdmin()">Masuk</button>
+</div>
+
+<!-- PANEL ADMIN (disembunyikan dulu) -->
+<div class="container admin-panel" id="adminPanel" style="display:none;">
+    <h2>Tambah Berita Baru</h2>
+
+    <input type="text" id="judul" placeholder="Judul Berita">
+    <textarea id="konten" placeholder="Isi Berita..."></textarea>
+
+    <label>Gambar:</label>
+    <input type="file" id="gambar" accept="image/*">
+
+    <button id="simpanBerita">Simpan Berita</button>
+
+    <h2 style="margin-top:30px;">Daftar Berita</h2>
+    <div id="adminBeritaList"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
