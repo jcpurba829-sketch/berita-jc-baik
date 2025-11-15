@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TBJ Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>ADMIN PANEL</h2>
+
+<div id="login-box">
+    <input id="password" placeholder="Masukkan password admin">
+    <button id="login-btn">Masuk</button>
+</div>
+
+<div id="admin-panel" style="display:none;">
+    <h3>Tambah Berita</h3>
+    <input id="judul" placeholder="Judul">
+    <textarea id="isi" placeholder="Isi berita"></textarea>
+    <input type="file" id="gambar">
+    <button id="kirim">Kirim Berita</button>
+
+    <h3>Daftar Berita</h3>
+    <div id="admin-berita-list"></div>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
