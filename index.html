@@ -1,42 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TBJ — Berita</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TBJ News</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <h1>TBJ</h1>
-    <nav>
-      <a href="index.html">Berita</a>
-      <a href="admin.html">Login Admin</a>
-      <a href="index.html">Berita</a>
-      <a href="admin.html">Admin (masuk)</a>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section id="posts" class="posts-grid" aria-live="polite">
-      <!-- Posts will appear here -->
-    </section>
-  </main>
-
-  <template id="post-card">
-    <article class="card">
-      <a class="thumb-link" href="#">
-        <img class="thumb" alt="thumbnail" />
-      </a>
-      <div class="card-body">
-        <h2 class="card-title"></h2>
-        <p class="card-excerpt"></p>
-        <div class="meta"> <time class="date"></time> • <span class="author"></span></div>
-        <a class="read-more" href="#">Baca</a>
-      </div>
-    </article>
-  </template>
-
-  <script src="script.js"></script>
+<nav>
+<h2>TBJ News</h2>
+<a href="admin.html">Login Admin</a>
+</nav>
+<h1>Semua Berita</h1>
+<div id="news-list"></div>
+<script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,55 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TBJ — Admin</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin TBJ</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <h1>TBJ — Admin</h1>
-    <nav><a href="index.html">Lihat situs</a></nav>
-  </header>
-
-  <main class="container admin">
-    <section class="login" id="loginBox">
-      <h2>Masuk Admin</h2>
-      <label>Password admin
-        <input id="adminPass" type="password" placeholder="password" />
-      </label>
-      <button id="loginBtn">Masuk</button>
-      <p class="hint">Password default: <code>tbjadmin123</code>. Ganti setelah deploy.</p>
-    </section>
-
-    <section id="adminPanel" hidden>
-      <h2>Buat Berita Baru</h2>
-      <form id="postForm">
-        <input name="title" placeholder="Judul" required />
-        <input name="author" placeholder="Penulis" required />
-        <textarea name="content" placeholder="Isi berita (HTML sederhana diperbolehkan)" required></textarea>
-        <label>Upload gambar (akan jadi thumbnail)
-          <input name="image" type="file" accept="image/*" />
-        </label>
-        <button type="submit">Terbitkan</button>
-      </form>
-
-      <h2>Daftar Berita</h2>
-      <div id="adminList"></div>
-
-      <hr />
-      <h3>Export / Deploy</h3>
-      <p>Jika ingin agar berita muncul untuk semua orang, upload file <code>posts.json</code> ke repo GitHub Pages Anda (sama folder dengan index.html), atau gunakan GitHub API token di bawah untuk commit otomatis.</p>
-
-      <label>GitHub repo (user/repo): <input id="ghRepo" placeholder="username/repo" /></label>
-      <label>GitHub branch: <input id="ghBranch" value="gh-pages" /></label>
-      <label>Personal Access Token (optional): <input id="ghToken" type="password" placeholder="token" /></label>
-      <button id="saveRemote">Commit ke GitHub (opsional)</button>
-      <button id="downloadJson">Download posts.json</button>
-
-    </section>
-  </main>
-
-  <script src="script.js"></script>
+<nav>
+<h2>Admin TBJ</h2>
+<a href="index.html">Berita</a>
+</nav>
+<div class="admin-box">
+<h2>Buat Berita</h2>
+<input type="text" id="judul" placeholder="Judul Berita">
+<textarea id="isi" placeholder="Isi Berita"></textarea>
+<label>Upload Gambar:</label>
+<input type="file" id="gambar">
+<button id="kirim">Kirim Berita</button>
+</div>
+<h2>Daftar Berita</h2>
+<div id="admin-news"></div>
+<script type="module" src="script.js"></script>
 </body>
 </html>
