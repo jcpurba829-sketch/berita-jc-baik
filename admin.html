@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Tambah Berita</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Panel Admin</h1>
+
+        <!-- FORM TAMBAH BERITA -->
+        <form id="news-form" class="admin-form">
+            <h2>Tambah Berita Baru</h2>
+
+            <label>Judul Berita:</label>
+            <input type="text" id="title" placeholder="Masukkan judul berita" required>
+
+            <label>Isi Berita:</label>
+            <textarea id="content" placeholder="Tulis isi berita..." required></textarea>
+
+            <label>URL Gambar (opsional):</label>
+            <input type="text" id="image-url" placeholder="Tempel URL gambar di sini">
+
+            <button type="submit" class="btn">Tambah Berita</button>
+        </form>
+
+        <hr>
+
+        <h2>Daftar Berita</h2>
+        <div id="news-list-admin"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
