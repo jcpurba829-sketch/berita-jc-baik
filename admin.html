@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="admin.js"></script>
+</head>
+<body>
+  <h1>Admin Panel</h1>
+  <input id="adminPass" type="password" placeholder="Password admin">
+  <button id="loginBtn">Login</button>
+
+  <div id="adminArea" style="display:none;">
+    <h2>Buat Berita</h2>
+    <input id="titleInput" placeholder="Judul">
+    <textarea id="contentInput" placeholder="Isi berita"></textarea>
+    <input type="file" id="imgInput">
+    <button id="postBtn">Posting</button>
+
+    <h2>Berita</h2>
+    <div id="adminNewsList"></div>
+  </div>
+</body>
+</html>
