@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin TBJ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Admin TBJ</h1>
+    <nav><a href="index.html">Lihat Situs</a></nav>
+  </header>
+
+  <main class="container admin-container">
+    <div id="auth-card" class="card">
+      <h2>Login Admin</h2>
+      <input id="email" type="email" placeholder="Email admin" />
+      <input id="password" type="password" placeholder="Password" />
+      <button id="loginBtn" class="btn">Masuk</button>
+      <button id="logoutBtn" class="btn" style="display:none;background:#666;margin-top:10px">Logout</button>
+      <p id="authMsg" class="muted"></p>
+    </div>
+
+    <div id="panel" class="card" style="display:none">
+      <h2>Buat Berita</h2>
+      <input id="title" placeholder="Judul" />
+      <input id="image" type="file" accept="image/*" />
+      <textarea id="content" rows="6" placeholder="Isi berita"></textarea>
+      <button id="publishBtn" class="btn">Terbitkan</button>
+    </div>
+
+    <div id="manage" class="card" style="display:none">
+      <h3>Kelola Berita</h3>
+      <div id="manage-list"></div>
+    </div>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
