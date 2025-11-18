@@ -1,54 +1,29 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Portal Berita</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        .berita-card {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-        }
-        a { text-decoration: none; }
-    </style>
+<meta charset="UTF-8" />
+<title>Portal Berita</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+.news { padding: 15px; border:1px solid #ccc; margin-bottom:10px; border-radius:8px; }
+</style>
+<script>
+async function loadNews(){
+    let res = await fetch("data.json");
+    let data = await res.json();
+    let wrap = document.getElementById("wrap");
+    wrap.innerHTML="";
+    data.forEach((b,i)=>{
+        wrap.innerHTML += `<div class='news'><h3>${b.judul}</h3><p>${b.isi}</p></div>`;
+    });
+}
+window.onload = loadNews;
+</script>
 </head>
 <body>
-
 <h1>Portal Berita</h1>
-<a href="admin.html">➕ Buat Berita (Admin)</a>
+<a href="admin.html">Login Admin</a>
 <hr>
-
-<div id="listBerita">Memuat berita...</div>
-
-<script>
-async function loadBerita() {
-    try {
-        const res = await fetch("data.json");
-        const data = await res.json();
-
-        let html = "";
-
-        data.forEach((b, i) => {
-            html += `
-                <div class="berita-card">
-                    <h2>${b.judul}</h2>
-                    <p>${b.isi.substring(0, 120)}...</p>
-                    <a href="detail.html?id=${i}">Baca Selengkapnya</a>
-                </div>
-            `;
-        });
-
-        document.getElementById("listBerita").innerHTML = html;
-
-    } catch (e) {
-        document.getElementById("listBerita").innerHTML = "Gagal memuat berita.";
-    }
-}
-
-loadBerita();
-</script>
-
+<div id="wrap"></div>
 </body>
 </html>
