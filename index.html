@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Berita</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .berita-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        a { text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<h1>Portal Berita</h1>
+<a href="admin.html">➕ Buat Berita (Admin)</a>
+<hr>
+
+<div id="listBerita">Memuat berita...</div>
+
+<script>
+async function loadBerita() {
+    try {
+        const res = await fetch("data.json");
+        const data = await res.json();
+
+        let html = "";
+
+        data.forEach((b, i) => {
+            html += `
+                <div class="berita-card">
+                    <h2>${b.judul}</h2>
+                    <p>${b.isi.substring(0, 120)}...</p>
+                    <a href="detail.html?id=${i}">Baca Selengkapnya</a>
+                </div>
+            `;
+        });
+
+        document.getElementById("listBerita").innerHTML = html;
+
+    } catch (e) {
+        document.getElementById("listBerita").innerHTML = "Gagal memuat berita.";
+    }
+}
+
+loadBerita();
+</script>
+
+</body>
+</html>
