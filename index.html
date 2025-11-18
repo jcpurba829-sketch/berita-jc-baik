@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Interaktif</title>
+
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s ease;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #loginStatus {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #222;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Demo Tombol Interaktif</h1>
+
+    <!-- Tombol untuk mengubah background -->
+    <button id="colorButton">Ubah Warna Latar</button>
+
+    <!-- Tombol login -->
+    <button id="loginButton">Login</button>
+
+    <!-- Teks status login -->
+    <div id="loginStatus"></div>
+
+    <script>
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#33FFF6', '#F3FF33'];
+
+        // Ubah warna background
+        document.getElementById('colorButton').addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            const newColor = colors[randomIndex];
+            document.body.style.backgroundColor = newColor;
+            document.getElementById('colorButton').textContent = `Warna: ${newColor}`;
+        });
+
+        // Tombol login berfungsi
+        document.getElementById('loginButton').addEventListener('click', () => {
+            document.getElementById('loginStatus').textContent = "Login berhasil! 🎉";
+        });
+    </script>
+
+</body>
+</html>
