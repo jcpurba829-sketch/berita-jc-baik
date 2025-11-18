@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Web Berita Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body{
+        margin:0;
+        font-family:Arial, sans-serif;
+        background:#f4f4f4;
+        color:#222;
+    }
+    header{
+        background:#0077ff;
+        color:white;
+        padding:15px;
+        text-align:center;
+    }
+    .container{
+        max-width:900px;
+        margin:auto;
+        padding:15px;
+    }
+    .card{
+        background:white;
+        padding:15px;
+        border-radius:8px;
+        margin-bottom:15px;
+        box-shadow:0 2px 4px rgba(0,0,0,0.1);
+    }
+    input,textarea{
+        width:100%;
+        padding:10px;
+        margin-top:8px;
+        border-radius:6px;
+        border:1px solid #ccc;
+    }
+    button{
+        padding:10px 14px;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+        margin-top:10px;
+    }
+    .btn-primary{
+        background:#0077ff;
+        color:white;
+    }
+    .btn-danger{
+        background:#d90000;
+        color:white;
+    }
+    img{
+        max-width:100%;
+        border-radius:6px;
+        margin-top:10px;
+    }
+    .admin-badge{
+        display:inline-block;
+        background:#d1fad1;
+        padding:4px 8px;
+        border-radius:6px;
+        font-size:12px;
+        margin-bottom:10px;
+        color:#125c12;
+        font-weight:bold;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h2>Web Berita Demo</h2>
+</header>
+
+<div class="container">
+
+    <!-- LOGIN ADMIN -->
+    <div id="loginBox" class="card">
+        <h3>Login Admin</h3>
+        <input type="password" id="adminPass" placeholder="Password admin">
+        <button class="btn-primary" onclick="login()">Masuk</button>
+        <p>Password admin default: <b>admin123</b></p>
+    </div>
+
+    <!-- PANEL ADMIN -->
+    <div id="adminPanel" class="card" style="display:none;">
+        <span class="admin-badge">ADMIN</span>
+        <button class="btn-danger" onclick="logout()">Logout</button>
+
+        <h3>Buat Berita Baru</h3>
+
+        <input id="judul" placeholder="Judul berita">
+        <textarea id="isi" placeholder="Isi berita" rows="4"></textarea>
+        <input type="file" id="gambar" accept="image/*">
+
+        <button class="btn-primary" onclick="buatBerita()">Upload Berita</button>
+    </div>
+
+    <!-- LIST BERITA -->
+    <h3>Daftar Berita</h3>
+    <div id="listBerita"></div>
+
+</div>
+
+<script>
+// === CONFIG ===
+const ADMIN_PASSWORD = "admin123";
+
+// === STATE ===
+let isAdmin = localStorage.getItem("isAdmin") === "true";
+let berita = JSON.parse(localStorage.getItem("beritaDB") || "[]");
+
+// === INIT ===
+window.onload = () => {
+    renderUI();
+    renderBerita();
+};
+
+// === LOGIN ===
+function login(){
+    const pw = document.getElementById("adminPass").value;
+    if (pw === ADMIN_PASSWORD){
+        isAdmin = true;
+        localStorage.setItem("isAdmin", "true");
+        renderUI();
+        alert("Login berhasil!");
+    } else {
+        alert("Password salah!");
+    }
+}
+
+function logout(){
+    isAdmin = false;
+    localStorage.removeItem("isAdmin");
+    renderUI();
+}
+
+// === RENDER UI ===
+function renderUI(){
+    document.getElementById("loginBox").style.display = isAdmin ? "none" : "block";
+    document.getElementById("adminPanel").style.display = isAdmin ? "block" : "none";
+}
+
+// === BUAT BERITA ===
+function buatBerita(){
+    const judul = document.getElementById("judul").value.trim();
+    const isi = document.getElementById("isi").value.trim();
+    const gambarInput = document.getElementById("gambar");
+
+    if (!judul || !isi){
+        alert("Judul dan isi wajib diisi!");
+        return;
+    }
+
+    if (gambarInput.files.length === 0){
+        alert("Upload gambar dulu!");
+        return;
+    }
+
+    const file = gambarInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+        const base64 = e.target.result;
+
+        const data = {
+            id: Date.now(),
+            judul,
+            isi,
+            gambar: base64,
+            waktu: new Date().toLocaleString()
+        };
+
+        berita.push(data);
+        localStorage.setItem("beritaDB", JSON.stringify(berita));
+
+        document.getElementById("judul").value = "";
+        document.getElementById("isi").value = "";
+        document.getElementById("gambar").value = "";
+
+        renderBerita();
+        alert("Berita berhasil dibuat!");
+    };
+
+    reader.readAsDataURL(file);
+}
+
+// === HAPUS BERITA ===
+function hapusBerita(id){
+    if (!confirm("Yakin hapus berita ini?")) return;
+    berita = berita.filter(b => b.id !== id);
+    localStorage.setItem("beritaDB", JSON.stringify(berita));
+    renderBerita();
+}
+
+// === RENDER BERITA ===
+function renderBerita(){
+    const box = document.getElementById("listBerita");
+    box.innerHTML = "";
+
+    if (berita.length === 0){
+        box.innerHTML = "<p>Belum ada berita.</p>";
+        return;
+    }
+
+    berita.slice().reverse().forEach(b => {
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <h3>${b.judul}</h3>
+            <img src="${b.gambar}">
+            <p>${b.isi}</p>
+            <small><i>${b.waktu}</i></small><br><br>
+            ${ isAdmin ? `<button class="btn-danger" onclick="hapusBerita(${b.id})">Hapus</button>` : "" }
+        `;
+
+        box.appendChild(div);
+    });
+}
+</script>
+
+</body>
+</html>
