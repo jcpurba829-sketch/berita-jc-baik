@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Web Berita - Demo (HTML + JS)</title>
+  <style>
+    :root{
+      --bg:#f3f4f6; --card:#fff; --muted:#6b7280; --accent:#2563eb; --danger:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:#0f172a}
+    .wrap{max-width:980px;margin:20px auto;padding:16px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    h1{margin:0;font-size:20px}
+    p.small{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 1px 4px rgba(2,6,23,0.06);margin-top:16px}
+    input,textarea,button,select{font-family:inherit}
+    input,textarea,select{width:100%;padding:8px;border:1px solid #e6e9ee;border-radius:8px}
+    textarea{resize:vertical}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid #cfe0ff}
+    .btn.danger{background:var(--danger)}
+    .admin-badge{background:#ecfccb;color:#365314;padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px}
+    .row{display:flex;gap:8px;align-items:center}
+    .col-2{display:grid;grid-template-columns:1fr 320px;gap:16px}
+    .muted{color:var(--muted);font-size:13px}
+    .article{margin-top:12px;padding:12px;border-radius:8px;background:#fbfdff;border:1px solid #eef2ff}
+    .article h3{margin:0 0 6px 0}
+    .meta{font-size:12px;color:var(--muted)}
+    .comments{margin-top:10px}
+    .comment{background:#fff;padding:8px;border-radius:6px;border:1px solid #f1f5f9;margin-top:8px}
+    .small{font-size:13px;color:var(--muted)}
+    .hidden{display:none}
+    .footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:880px){ .col-2{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Web Berita — Demo (HTML + JS)</h1>
+        <p class="small">Admin dapat buat/hapus berita. Semua user bisa komentar. Data tersimpan di localStorage browser.</p>
+      </div>
+
+      <div id="authArea" class="row">
+        <!-- filled by JS -->
+      </div>
+    </header>
+
+    <main class="col-2">
+      <section>
+        <div class="card">
+          <h2 style="margin:0 0 8px 0">Buat Berita</h2>
+          <div id="adminPanel">
+            <!-- admin form -->
+            <div class="muted" id="notAdminMsg">Masuk sebagai admin untuk membuat berita.</div>
+            <form id="createForm" class="hidden" autocomplete="off">
+              <label>Judul</label>
+              <input id="title" required placeholder="Judul berita">
+              <label style="margin-top:8px">Ringkasan (opsional)</label>
+              <input id="summary" placeholder="Ringkasan singkat">
+              <label style="margin-top:8px">Isi</label>
+              <textarea id="content" rows="5" required placeholder="Isi lengkap berita"></textarea>
+              <div style="margin-top:8px" class="row">
+                <button class="btn" type="submit">Buat Berita</button>
+                <button type="button" id="clearForm" class="btn ghost">Bersihkan</button>
+              </div>
+              <div class="small" style="margin-top:8px">Password admin demo: <code>admin123</code>. Ganti di kode untuk produksi.</div>
+            </form>
+          </div>
+        </div>
+
+        <section id="articlesList" style="margin-top:12px"></section>
+      </section>
+
+      <aside>
+        <div class="card">
+          <h3>Panel Admin</h3>
+          <div id="loginBox">
+            <form id="loginForm" autocomplete="off">
+              <label>Password admin</label>
+              <input id="adminPassword" type="password" placeholder="Password admin">
+              <div style="margin-top:8px" class="row">
+                <button class="btn" type="submit">Masuk</button>
+                <button type="button" id="demoLogout" class="btn ghost hidden">Logout</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="adminInfo" class="hidden" style="margin-top:8px">
+            <div class="row" style="justify-content:space-between;align-items:center">
+              <div><span class="admin-badge">ADMIN</span></div>
+              <div><button id="logoutBtn" class="btn ghost">Logout</button></div>
+            </div>
+            <p class="small" style="margin-top:8px">Kamu sedang login sebagai admin. Sekarang bisa membuat & menghapus berita.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Tentang</h3>
+          <p class="muted" style="margin:0">Ini demo web berita tanpa backend. Data disimpan lokal di browser (localStorage). Cocok di GitHub Pages.</p>
+        </div>
+      </aside>
+    </main>
+
+    <div class="footer">&copy; <span id="year"></span> Web Berita — Demo</div>
+  </div>
+
+  <script>
+  (function(){
+    // CONFIG
+    const LOCAL_KEY = 'wb_articles_v1';
+    const ADMIN_KEY = 'wb_is_admin_v1';
+    const ADMIN_PASSWORD = 'admin123'; // ubah kalau perlu
+
+    // DOM
+    const authArea = document.getElementById('authArea');
+    const loginForm = document.getElementById('loginForm');
+    const adminPassword = document.getElementById('adminPassword');
+    const adminInfo = document.getElementById('adminInfo');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const demoLogout = document.getElementById('demoLogout');
+    const createForm = document.getElementById('createForm');
+    const notAdminMsg = document.getElementById('notAdminMsg');
+    const adminPanel = document.getElementById('adminPanel');
+    const articlesList = document.getElementById('articlesList');
+    const yearEl = document.getElementById('year');
+    const clearForm = document.getElementById('clearForm');
+
+    yearEl.textContent = new Date().getFullYear();
+
+    // state
+    let articles = [];
+    let isAdmin = localStorage.getItem(ADMIN_KEY) === 'true';
+
+    // helpers
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+    function save() {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(articles));
+    }
+    function load() {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) {
+        try { articles = JSON.parse(raw); }
+        catch(e){ articles = []; }
+      } else {
+        // seed sample article
+        articles = [{
+          id: uid(),
+          title: 'Selamat Datang di Web Berita',
+          summary: 'Demo: admin buat berita, publik komentar. Disimpan di localStorage.',
+          content: 'Ini berita contoh. Edit atau hapus bila perlu. Data tersimpan di browser saja.',
+          author: 'Redaksi',
+          createdAt: new Date().toISOString(),
+          comments: [{
+            id: uid(), name: 'Pembaca', text: 'Keren, terima kasih!', time: new Date().toISOString()
+          }]
+        }];
+        save();
+      }
+    }
+
+    // render
+    function renderAuth() {
+      if (isAdmin) {
+        loginForm.classList.add('hidden');
+        adminInfo.classList.remove('hidden');
+        createForm.classList.remove('hidden');
+        notAdminMsg.classList.add('hidden');
+        demoLogout.classList.remove('hidden');
+      } else {
+        loginForm.classList.remove('hidden');
+        adminInfo.classList.add('hidden');
+        createForm.classList.add('hidden');
+        notAdminMsg.classList.remove('hidden');
+        demoLogout.classList.add('hidden');
+      }
+    }
+
+    function renderArticles(){
+      articlesList.innerHTML = '';
+      if (articles.length === 0) {
+        articlesList.innerHTML = '<div class="card">Belum ada berita.</div>';
+        return;
+      }
+
+      articles.slice().reverse().forEach(a=>{
+        const art = document.createElement('article');
+        art.className = 'article';
+        art.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:12px">
+            <div style="flex:1">
+              <h3>${escapeHtml(a.title)}</h3>
+              <div class="meta">Oleh ${escapeHtml(a.author)} • ${new Date(a.createdAt).toLocaleString()}</div>
+            </div>
+            <div class="row">
+              ${isAdmin? `<button class="btn danger" data-delete="${a.id}">Hapus</button>` : ''}
+            </div>
+          </div>
+          <div style="margin-top:10px;white-space:pre-wrap">${escapeHtml(a.summary || a.content)}</div>
+
+          <div class="comments">
+            <h4 style="margin:10px 0 6px 0">Komentar (${a.comments?.length || 0})</h4>
+            <div class="commentList">
+              ${ (a.comments || []).map(c => `
+                <div class="comment" data-cid="${c.id}">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div><strong>${escapeHtml(c.name)}</strong> <span class="small">• ${new Date(c.time).toLocaleString()}</span></div>
+                    ${isAdmin ? `<button class="btn ghost" data-delc="${a.id}::${c.id}">Hapus</button>` : ''}
+                  </div>
+                  <div style="margin-top:6px">${escapeHtml(c.text)}</div>
+                </div>
+              `).join('') }
+            </div>
+
+            <form data-addcomment="${a.id}" style="margin-top:8px">
+              <input name="name" placeholder="Nama (opsional)" style="margin-bottom:6px">
+              <textarea name="text" rows="2" placeholder="Tulis komentar..." required></textarea>
+              <div style="margin-top:6px"><button class="btn" type="submit">Kirim Komentar</button></div>
+            </form>
+          </div>
+        `;
+        articlesList.appendChild(art);
+      });
+
+      // attach delete article handlers
+      document.querySelectorAll('[data-delete]').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const id = btn.getAttribute('data-delete');
+          if (!confirm('Hapus berita ini?')) return;
+          articles = articles.filter(x => x.id !== id);
+          save(); renderArticles();
+        });
+      });
+
+      // attach add comment handlers
+      document.querySelectorAll('form[data-addcomment]').forEach(f=>{
+        f.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          const aid = this.getAttribute('data-addcomment');
+          const name = this.name.value.trim() || 'Anonim';
+          const text = this.text.value.trim();
+          if (!text) { alert('Komentar kosong'); return; }
+          const idx = articles.findIndex(ar => ar.id === aid);
+          if (idx === -1) { alert('Artikel tidak ditemukan'); return; }
+          articles[idx].comments = articles[idx].comments || [];
+          articles[idx].comments.push({ id: uid(), name, text, time: new Date().toISOString() });
+          save();
+          this.reset();
+          renderArticles();
+        });
+      });
+
+      // attach delete comment (admin)
+      document.querySelectorAll('[data-delc]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const pair = btn.getAttribute('data-delc'); // "aid::cid"
+          const [aid,cid] = pair.split('::');
+          if (!confirm('Hapus komentar ini?')) return;
+          const ai = articles.findIndex(x=>x.id===aid);
+          if (ai === -1) return;
+          articles[ai].comments = (articles[ai].comments||[]).filter(c=>c.id!==cid);
+          save(); renderArticles();
+        });
+      });
+    }
+
+    function escapeHtml(s){
+      if (!s && s !== 0) return '';
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    // actions
+    loginForm.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      const pass = adminPassword.value;
+      if (pass === ADMIN_PASSWORD) {
+        isAdmin = true;
+        localStorage.setItem(ADMIN_KEY,'true');
+        adminPassword.value = '';
+        renderAuth();
+        renderArticles();
+        alert('Berhasil masuk sebagai admin');
+      } else {
+        alert('Password salah');
+      }
+    });
+
+    logoutBtn.addEventListener('click', doLogout);
+    demoLogout.addEventListener('click', doLogout);
+    function doLogout(){
+      isAdmin = false;
+      localStorage.removeItem(ADMIN_KEY);
+      renderAuth();
+      renderArticles();
+      alert('Logout berhasil');
+    }
+
+    createForm.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      const t = document.getElementById('title').value.trim();
+      const s = document.getElementById('summary').value.trim();
+      const c = document.getElementById('content').value.trim();
+      if (!t || !c) { alert('Judul & isi wajib diisi'); return; }
+      const art = {
+        id: uid(),
+        title: t, summary: s, content: c,
+        author: 'Admin', createdAt: new Date().toISOString(),
+        comments: []
+      };
+      articles.push(art);
+      save();
+      document.getElementById('title').value=''; document.getElementById('summary').value=''; document.getElementById('content').value='';
+      renderArticles();
+      alert('Berita dibuat');
+    });
+
+    clearForm.addEventListener('click', ()=> {
+      document.getElementById('title').value=''; document.getElementById('summary').value=''; document.getElementById('content').value='';
+    });
+
+    // init
+    load();
+    renderAuth();
+    renderArticles();
+
+    // If admin flag present in localStorage (persist across reload)
+    if (localStorage.getItem(ADMIN_KEY) === 'true') {
+      isAdmin = true;
+      renderAuth();
+      renderArticles();
+    }
+
+    // optional: expose for debugging
+    window.wb = { articles, save };
+  })();
+  </script>
+</body>
+</html>
